@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mac OS Interface</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <span class="status-apple"></span>
+            <span class="status-menu">Finder</span>
+            <span class="status-menu">File</span>
+            <span class="status-menu">Edit</span>
+            <span class="status-menu">View</span>
+            <span class="status-menu">Go</span>
+            <span class="status-menu">Window</span>
+            <span class="status-menu">Help</span>
+        </div>
+        <div class="status-bar-right">
+            <span class="status-time" id="statusTime">12:00</span>
+        </div>
+    </div>
+    <div class="desktop">
+        <!-- Windows will be dynamically added here -->
+    </div>
+    
+    <div class="dock">
+        <div class="app-icon" data-app="video">
+            <img src="icons/youtube.png" alt="Video">
+            <span class="app-name">Video</span>
+        </div>
+        <div class="app-icon" data-app="arc">
+            <img src="icons/arc.png" alt="Arc">
+            <span class="app-name">Arc</span>
+        </div>
+        <div class="app-icon" data-app="notes">
+            <img src="icons/notes.png" alt="Notes">
+            <span class="app-name">Notes</span>
+        </div>
+        <div class="app-icon" data-app="photos">
+            <img src="icons/photos.png" alt="Photos">
+            <span class="app-name">Photos</span>
+        </div>
+        <div class="app-icon" data-app="music">
+            <img src="icons/music.png" alt="Music">
+            <span class="app-name">Music</span>
+        </div>
+    </div>
+
+    <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+    <script src="script.js"></script>
+</body>
+</html> 
