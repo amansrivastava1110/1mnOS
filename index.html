@@ -10,13 +10,8 @@
     <div class="status-bar">
         <div class="status-bar-left">
             <span class="status-apple"></span>
-            <span class="status-menu">Finder</span>
-            <span class="status-menu">File</span>
-            <span class="status-menu">Edit</span>
-            <span class="status-menu">View</span>
-            <span class="status-menu">Go</span>
-            <span class="status-menu">Window</span>
-            <span class="status-menu">Help</span>
+            <span class="status-menu">About</span>
+            <span class="status-menu">Contact</span>
         </div>
         <div class="status-bar-right">
             <span class="status-time" id="statusTime">12:00</span>
@@ -43,13 +38,19 @@
             <img src="icons/photos.png" alt="Photos">
             <span class="app-name">Photos</span>
         </div>
-        <div class="app-icon" data-app="music">
-            <img src="icons/music.png" alt="Music">
-            <span class="app-name">Music</span>
+        <div class="app-icon" data-app="spotify">
+            <img src="icons/spotify.png" alt="Spotify">
+            <span class="app-name">Spotify</span>
+        </div>
+        <div class="app-icon" data-app="doodle">
+            <img src="icons/doodle.png" alt="Doodle">
+            <span class="app-name">Doodle</span>
         </div>
     </div>
 
     <audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="appOpenSound" src="sounds/app_open.mp3" preload="auto"></audio>
+    <audio id="pencilSound" src="sounds/pencil.mp3" preload="auto"></audio>
     <script src="script.js"></script>
 </body>
 </html> 

@@ -106,12 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="format-btn" data-command="bold"><b>B</b></button>
                     <button class="format-btn" data-command="italic"><i>I</i></button>
                     <button class="format-btn" data-command="underline"><u>U</u></button>
-                    <!-- Add more formatting buttons here -->
-                    <button class="send-btn">Send to 1MN</button>
                 </div>
                 <div class="notes-content" contenteditable="true">
-                    <h2>Welcome to Notes!</h2>
-                    <p>Start writing your notes here.</p>
+                    Start writing your notes here...
                 </div>
             </div>
         `,
@@ -153,6 +150,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <audio id="music-player" src="sounds/sample-song.mp3"></audio>
             </div>
+        `,
+        spotify: `
+            <div class="spotify-app">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2Q8C5oCQuf3eW59TZMOxFP?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        `,
+        doodle: `
+            <div class="doodle-app">
+                <canvas id="doodle-canvas" width="500" height="500"></canvas>
+            </div>
         `
     };
 
@@ -180,12 +187,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Create window function
     function createWindow(appName) {
-        // Prevent multiple windows for the same app
+        // Prevent multiple windows for the same app or restore minimized
         if (openAppWindows[appName]) {
             const existingWindow = document.getElementById(openAppWindows[appName]);
             if (existingWindow && document.body.contains(existingWindow)) {
+                // Window exists, restore it
+                existingWindow.style.display = 'block';
                 topZIndex++;
                 existingWindow.style.zIndex = topZIndex;
+                // Bring window to front by focusing it (optional but good UX)
+                // existingWindow.focus();
+
+                // Play sound if it's the Doodle app
+                if (appName === 'doodle') {
+                    const appOpenSound = document.getElementById('appOpenSound');
+                    if (appOpenSound) {
+                        appOpenSound.currentTime = 0;
+                        appOpenSound.play().catch(error => console.error('Error playing sound:', error));
+                    }
+                }
+
                 return;
             } else {
                 // Window was removed from DOM, allow opening a new one
@@ -284,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="window-control minimize"></div>
                     <div class="window-control maximize"></div>
                 </div>
-                <div class="window-title">${appName}</div>
+                <div style="flex-grow: 1;"></div>
             </div>
             <div class="window-content">
                 ${videoHTML}
@@ -418,55 +439,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Add music player functionality if it's the music window
-        if (appName === 'music') {
-            const audio = window.querySelector('#music-player');
-            const playPauseBtn = window.querySelector('.play-pause');
-            const prevBtn = window.querySelector('.prev');
-            const nextBtn = window.querySelector('.next');
-            const progressBar = window.querySelector('.progress');
-            const currentTimeSpan = window.querySelector('.current-time');
-            const totalTimeSpan = window.querySelector('.total-time');
-            const playIcon = window.querySelector('.play-icon');
-            const pauseIcon = window.querySelector('.pause-icon');
+        // Add Notes app logic if it's the notes window
+        if (appName === 'notes') {
+            const notesContent = window.querySelector('.notes-content');
+            const formatButtons = window.querySelectorAll('.notes-toolbar .format-btn');
 
-            playPauseBtn.addEventListener('click', () => {
-                if (audio.paused) {
-                    audio.play();
-                    playIcon.style.display = 'none';
-                    pauseIcon.style.display = 'block';
-                } else {
-                    audio.pause();
-                    playIcon.style.display = 'block';
-                    pauseIcon.style.display = 'none';
-                }
-            });
-
-            audio.addEventListener('timeupdate', () => {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = `${progress}%`;
-                
-                // Update current time
-                const minutes = Math.floor(audio.currentTime / 60);
-                const seconds = Math.floor(audio.currentTime % 60);
-                currentTimeSpan.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            });
-
-            audio.addEventListener('loadedmetadata', () => {
-                const minutes = Math.floor(audio.duration / 60);
-                const seconds = Math.floor(audio.duration % 60);
-                totalTimeSpan.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            });
-
-            // Placeholder for next/prev functionality
-            nextBtn.addEventListener('click', () => {
-                // Add your next song logic here
-                console.log('Next song');
-            });
-
-            prevBtn.addEventListener('click', () => {
-                // Add your previous song logic here
-                console.log('Previous song');
+            formatButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const command = button.dataset.command;
+                    const value = button.dataset.value;
+                    
+                    if (command === 'formatBlock') {
+                        document.execCommand('formatBlock', false, value);
+                    } else {
+                        document.execCommand(command, false, null);
+                    }
+                    
+                    notesContent.focus(); // Keep focus on the content area after formatting
+                });
             });
         }
 
@@ -484,33 +474,67 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Add Notes app logic if it's the notes window
-        if (appName === 'notes') {
-            const notesContent = window.querySelector('.notes-content');
-            const formatButtons = window.querySelectorAll('.notes-toolbar .format-btn');
+        // Add Doodle app logic if it's the doodle window
+        if (appName === 'doodle') {
+            const canvas = window.querySelector('#doodle-canvas');
+            const ctx = canvas.getContext('2d');
+            const pencilSound = document.getElementById('pencilSound');
 
-            formatButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const command = button.dataset.command;
-                    document.execCommand(command, false, null);
-                    notesContent.focus(); // Keep focus on the content area after formatting
-                });
-            });
+            let drawing = false;
 
-            // Add send button logic
-            const sendButton = window.querySelector('.notes-toolbar .send-btn');
-            if (sendButton) {
-                sendButton.addEventListener('click', () => {
-                    const noteContent = notesContent.innerHTML; // Get the rich text content
-                    console.log('Sending note to 1MN:', noteContent);
-                    alert('Note content logged to console.'); // Provide user feedback
-                    // In a real application, you would send this content to a server or save it locally
-                });
+            function startDrawing(e) {
+                drawing = true;
+                draw(e);
+                if (pencilSound) {
+                    pencilSound.currentTime = 0; // Reset to start
+                    pencilSound.loop = true; // Loop the sound while drawing
+                    pencilSound.play().catch(error => console.error('Error playing pencil sound:', error));
+                }
             }
+
+            function stopDrawing() {
+                drawing = false;
+                ctx.beginPath();
+                if (pencilSound) {
+                    pencilSound.pause();
+                    pencilSound.currentTime = 0; // Reset for the next stroke
+                }
+            }
+
+            function draw(e) {
+                if (!drawing) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                ctx.lineWidth = 2; // Set drawing line width
+                ctx.lineCap = 'round'; // Set line cap style
+                ctx.strokeStyle = 'black'; // Set drawing color
+
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            }
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mousemove', draw);
         }
 
         desktop.appendChild(window);
-        setTimeout(() => window.classList.add('active'), 10);
+        setTimeout(() => {
+            window.classList.add('active');
+            // Play sound if it's the Doodle app when a new window is created
+            if (appName === 'doodle') {
+                const appOpenSound = document.getElementById('appOpenSound');
+                if (appOpenSound) {
+                    appOpenSound.currentTime = 0;
+                    appOpenSound.play().catch(error => console.error('Error playing sound:', error));
+                }
+            }
+        }, 10);
     }
 
     // Add click event to app icons
@@ -540,6 +564,11 @@ document.addEventListener('DOMContentLoaded', () => {
         item.addEventListener('click', () => {
             console.log(`Menu item clicked: ${item.textContent}`);
             // Add specific functionality here based on item.textContent
+            if (item.textContent === 'About') {
+                window.open('https://amansrivastava.co/', '_blank');
+            } else if (item.textContent === 'Contact') {
+                window.open('https://cal.com/amansrivastava/30min', '_blank');
+            }
         });
     });
 }); 
