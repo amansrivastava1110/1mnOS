@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `,
         doodle: `
             <div class="doodle-app">
+                <div class="doodle-note">Drag to draw</div>
                 <canvas id="doodle-canvas" width="500" height="500"></canvas>
             </div>
         `
@@ -571,4 +572,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Apple loading overlay logic
+    const appleOverlay = document.getElementById('apple-loading-overlay');
+    const appleBar = document.getElementById('apple-loading-bar');
+    const appleBootSound = document.getElementById('appleBootSound');
+    const appleStartBtn = document.getElementById('apple-start-btn');
+    if (appleOverlay && appleBar && appleStartBtn) {
+        appleBar.style.width = '0%';
+        appleStartBtn.addEventListener('click', () => {
+            appleStartBtn.disabled = true;
+            appleBootSound.currentTime = 0;
+            appleBootSound.play().catch(() => {});
+            setTimeout(() => {
+                appleBar.style.width = '100%';
+            }, 100);
+            setTimeout(() => {
+                appleOverlay.style.opacity = 0;
+                setTimeout(() => {
+                    appleOverlay.style.display = 'none';
+                    // Mac desktop animation
+                    const desktop = document.querySelector('.desktop');
+                    if (desktop) desktop.classList.add('desktop-loaded');
+                }, 600);
+            }, 2200);
+        });
+    }
 }); 
