@@ -7,41 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Video playlist data
     const videoPlaylist = [
         {
-            title: "living that von dutch life...",
-            description: "by charli xcx",
-            source: "videos/charli.mp4", // Local video
-            thumbnail: "videos/thumbnails/charli.jpg",
-            duration: "3:45"
-        },
-        {
             title: "op-xy",
             description: "by teenage engineering",
-            source: "videos/te.mp4", // Online video
-            thumbnail: "videos/thumbnails/video2.jpg",
-            duration: "4:20"
+            source: "videos/te.mp4", // Local video
         },
         {
-            title: "untergang",
-            description: "by klangkuenstler",
-            source: "videos/untergang.mp4", // Another local video
-            thumbnail: "videos/thumbnails/video3.jpg",
-            duration: "2:55"
+            title: "speed drive",
+            description: "by charli xcx",
+            source: "videos/charli.mp4", // Online video
+        },
+        {
+            title: "refreshed",
+            description: "by open ai",
+            source: "videos/openai.mp4", // Another local video
         }
     ];
 
     // Photo gallery data
-    const photoGallery = [
-        'photos/photo1.jpeg',
-        'photos/photo2.jpeg',
-        'photos/photo3.jpeg',
-        'photos/photo4.jpeg',
-        'photos/photo5.jpeg',
-        'photos/photo6.jpeg',
-        'photos/photo7.jpeg',
-        'photos/photo8.jpeg',
-        'photos/photo9.jpeg',
-        'photos/photo10.jpeg'
-    ];
+    const photoGallery = Array.from({ length: 10 }, (_, i) => `photos/photo${i + 1}.jpeg`);
 
     // Window content templates
     const windowContents = {
@@ -69,37 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `,
-        arc: `
-            <div class="browser-window">
-                <div class="browser-toolbar">
-                    <div class="browser-controls">
-                        <div class="browser-control close"></div>
-                        <div class="browser-control minimize"></div>
-                        <div class="browser-control maximize"></div>
-                    </div>
-                    <div class="browser-address-bar">
-                        <div class="browser-actions">
-                            <button class="browser-action back">←</button>
-                            <button class="browser-action forward">→</button>
-                            <button class="browser-action refresh">↻</button>
-                        </div>
-                        <input type="text" class="browser-url" placeholder="Search or enter website name" value="https://arc.net">
-                    </div>
-                </div>
-                <div class="browser-content">
-                    <div class="browser-sidebar">
-                        <div class="sidebar-item active">Home</div>
-                        <div class="sidebar-item">Favorites</div>
-                        <div class="sidebar-item">Today</div>
-                        <div class="sidebar-item">Pinned</div>
-                    </div>
-                    <div class="browser-main">
-                        <h2>Welcome to Arc Browser</h2>
-                        <p>A better way to browse the web.</p>
-                    </div>
-                </div>
-            </div>
-        `,
         notes: `
             <div class="notes-app">
                 <div class="notes-toolbar">
@@ -108,47 +60,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="format-btn" data-command="underline"><u>U</u></button>
                 </div>
                 <div class="notes-content" contenteditable="true">
-                    Start writing your notes here...
+                    This<br>
+                    is<br>
+                    the<br>
+                    <i>area</i><br>
+                    where<br>
+                    you<br>
+                    write<br>
+                    your<br>
+                    <b>dreams</b>
                 </div>
             </div>
         `,
         photos: `
-            <div class="photo-single-view">
-                <img class="photo-large-img" src="${photoGallery[0]}" alt="Photo 1">
-                <div class="photo-controls">
-                    <button class="photo-next-btn">Next</button>
-                </div>
+            <div class="photo-gallery">
+                ${photoGallery.map((photo, index) => `
+                    <div class="photo-thumb" data-index="${index}">
+                        <img src="${photo}" alt="Photo ${index + 1}">
+                    </div>
+                `).join('')}
             </div>
-        `,
-        music: `
-            <div class="music-player">
-                <div class="album-art">
-                    <img src="icons/music-album.jpg" alt="Album Art">
+            <div class="photo-modal" style="display: none;">
+                <div class="photo-modal-content">
+                    <img class="photo-modal-img" src="" alt="">
+                    <button class="photo-modal-close-btn"></button>
                 </div>
-                <div class="song-info">
-                    <h3 class="song-title">Sample Song</h3>
-                    <p class="artist">Sample Artist</p>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress"></div>
-                </div>
-                <div class="time-info">
-                    <span class="current-time">0:00</span>
-                    <span class="total-time">3:45</span>
-                </div>
-                <div class="controls">
-                    <button class="control-btn prev">
-                        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-                    </button>
-                    <button class="control-btn play-pause">
-                        <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        <svg class="pause-icon" viewBox="0 0 24 24" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                    </button>
-                    <button class="control-btn next">
-                        <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-                    </button>
-                </div>
-                <audio id="music-player" src="sounds/sample-song.mp3"></audio>
             </div>
         `,
         spotify: `
@@ -160,6 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="doodle-app">
                 <div class="doodle-note">Drag to draw</div>
                 <canvas id="doodle-canvas" width="500" height="500"></canvas>
+            </div>
+        `,
+        fortune: `
+            <div class="fortune-app">
+                <audio id="fortune-sound" src="sounds/fortune.mp3" loop></audio>
+                <video class="fortune-video" src="https://cdn.dribbble.com/userupload/40438643/file/original-42f5f3280d7d5b1c0cb9f50b7ef08d4d.mp4" autoplay loop muted playsinline preload="auto"></video>
+                <div class="fortune-output">😌 trust me & press</div>
+                <button class="fortune-cta">reveal my future</button>
             </div>
         `
     };
@@ -207,6 +151,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         appOpenSound.play().catch(error => console.error('Error playing sound:', error));
                     }
                 }
+                 // Play sound if it's the Fortune app
+                if (appName === 'fortune') {
+                    const fortuneSound = existingWindow.querySelector('#fortune-sound');
+                    if (fortuneSound) {
+                        fortuneSound.currentTime = 0;
+                        fortuneSound.play().catch(error => console.error('Error playing fortune sound:', error));
+                    }
+                }
 
                 return;
             } else {
@@ -218,44 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const window = document.createElement('div');
         window.className = 'window';
         window.id = `window-${windowCounter++}`;
+        window.setAttribute('data-app', appName);
         openAppWindows[appName] = window.id;
         window.style.zIndex = ++topZIndex;
         
         // Set position based on app type
         let posX = 50, posY = 50;
-        const windowWidth = 400;
-        const windowHeight = 300;
+        const windowWidth = appName === 'notes' ? 700 : 400;
+        const windowHeight = appName === 'notes' ? 400 : 300; // Notes height 400, others 300
         let initialVideoIndex = 0;
-        if (appName === 'video') {
-            // Video window always appears at top left
-            posX = 50;
-            posY = 50;
-            // Pick a random video index
-            initialVideoIndex = Math.floor(Math.random() * videoPlaylist.length);
-        } else {
-            // Other windows appear at non-overlapping random positions
-            const margin = 50;
-            const viewportWidth = document.documentElement.clientWidth;
-            const viewportHeight = document.documentElement.clientHeight;
-            const maxX = viewportWidth - windowWidth - margin;
-            const maxY = viewportHeight - windowHeight - margin;
-            let found = false;
-            let attempts = 0;
-            while (!found && attempts < 50) {
-                const randomX = Math.floor(Math.random() * maxX) + margin;
-                const randomY = Math.floor(Math.random() * maxY) + margin;
-                if (!isOverlapping(randomX, randomY, windowWidth, windowHeight, openWindows)) {
-                    posX = randomX;
-                    posY = randomY;
-                    found = true;
-                }
-                attempts++;
-            }
-            if (!found) {
-                posX = Math.floor(Math.random() * maxX) + margin;
-                posY = Math.floor(Math.random() * maxY) + margin;
-            }
-        }
+
         window.style.left = `${posX}px`;
         window.style.top = `${posY}px`;
         window.style.position = 'absolute';
@@ -315,8 +239,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Remove from openWindows and openAppWindows when closed
         window.querySelector('.close').addEventListener('click', () => {
+            // Stop sound if it's the Fortune app
+            if (appName === 'fortune') {
+                const fortuneSound = window.querySelector('#fortune-sound');
+                if (fortuneSound) {
+                    fortuneSound.pause();
+                    fortuneSound.currentTime = 0;
+                }
+            }
             openWindows = openWindows.filter(w => w.id !== window.id);
             delete openAppWindows[appName];
+             window.remove(); // Remove window from DOM
         });
 
         // Add video player functionality if it's the video window
@@ -452,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     if (command === 'formatBlock') {
                         document.execCommand('formatBlock', false, value);
-                    } else {
+                } else {
                         document.execCommand(command, false, null);
                     }
                     
@@ -463,16 +396,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add photo single view logic if it's the photos window
         if (appName === 'photos') {
+            const gallery = window.querySelector('.photo-gallery');
+            const modal = window.querySelector('.photo-modal');
+            const modalImg = window.querySelector('.photo-modal-img');
+            const closeBtn = window.querySelector('.photo-modal-close-btn');
             let currentPhotoIndex = 0;
-            const largeImg = window.querySelector('.photo-large-img');
-            const nextBtn = window.querySelector('.photo-next-btn');
-            if (largeImg && nextBtn) {
-                nextBtn.addEventListener('click', () => {
-                    currentPhotoIndex = (currentPhotoIndex + 1) % photoGallery.length;
-                    largeImg.src = photoGallery[currentPhotoIndex];
-                    largeImg.alt = `Photo ${currentPhotoIndex + 1}`;
-                });
-            }
+
+            // Handle thumbnail clicks
+            gallery.addEventListener('click', (e) => {
+                const thumb = e.target.closest('.photo-thumb');
+                if (thumb) {
+                    currentPhotoIndex = parseInt(thumb.dataset.index);
+                    modalImg.src = photoGallery[currentPhotoIndex];
+                    modal.style.display = 'flex';
+                }
+            });
+
+            // Handle modal close
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // Close modal when clicking outside the image
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Handle keyboard navigation
+            window.addEventListener('keydown', (e) => {
+                if (modal.style.display === 'flex') {
+                    if (e.key === 'ArrowLeft') {
+                        currentPhotoIndex = (currentPhotoIndex - 1 + photoGallery.length) % photoGallery.length;
+                        modalImg.src = photoGallery[currentPhotoIndex];
+                    } else if (e.key === 'ArrowRight') {
+                        currentPhotoIndex = (currentPhotoIndex + 1) % photoGallery.length;
+                        modalImg.src = photoGallery[currentPhotoIndex];
+                    } else if (e.key === 'Escape') {
+                        modal.style.display = 'none';
+                    }
+                }
+            });
         }
 
         // Add Doodle app logic if it's the doodle window
@@ -524,6 +489,44 @@ document.addEventListener('DOMContentLoaded', () => {
             canvas.addEventListener('mousemove', draw);
         }
 
+        // Add Fortune Teller app logic if it's the fortune window
+        if (appName === 'fortune') {
+            const fortuneOutput = window.querySelector('.fortune-output');
+            const fortuneCta = window.querySelector('.fortune-cta');
+            const fortuneSound = window.querySelector('#fortune-sound');
+            const fortunes = [
+                '💌 An ex is thinking about you',
+                '👠 You\’re about to outshine everyone',
+                '💼 A career move is coming',
+                '🕷️ Someone\’s throwing shade',
+                '📱 A risky text will lead to either glory or chaos',
+                '🔥 You\’re entering your villain era',
+                '💎 Money\’s coming',
+                '🌪️ Drama alert',
+                '🖤 Someone mysterious is watching you',
+                '🪩 Main character energy inbound'
+            ];
+
+            // Play fortune sound in loop when window is created
+            if (fortuneSound) {
+                fortuneSound.currentTime = 0;
+                fortuneSound.play().catch(error => console.error('Error playing fortune sound:', error));
+            }
+
+            fortuneCta.addEventListener('click', () => {
+                const randomIndex = Math.floor(Math.random() * fortunes.length);
+                fortuneOutput.textContent = fortunes[randomIndex];
+            });
+
+            // Stop sound when window is closed
+            window.querySelector('.close').addEventListener('click', () => {
+                if (fortuneSound) {
+                    fortuneSound.pause();
+                    fortuneSound.currentTime = 0;
+                }
+            });
+        }
+
         desktop.appendChild(window);
         setTimeout(() => {
             window.classList.add('active');
@@ -533,6 +536,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (appOpenSound) {
                     appOpenSound.currentTime = 0;
                     appOpenSound.play().catch(error => console.error('Error playing sound:', error));
+                }
+            }
+             // Play sound if it's the Fortune app when a new window is created
+            if (appName === 'fortune') {
+                const fortuneSound = window.querySelector('#fortune-sound');
+                if (fortuneSound) {
+                    fortuneSound.currentTime = 0;
+                    fortuneSound.play().catch(error => console.error('Error playing fortune sound:', error));
                 }
             }
         }, 10);
@@ -581,7 +592,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (appleOverlay && appleBar && appleStartBtn) {
         appleBar.style.width = '0%';
         appleStartBtn.addEventListener('click', () => {
-            appleStartBtn.disabled = true;
+            appleStartBtn.classList.add('fade-out');
+            setTimeout(() => {
+                appleStartBtn.style.visibility = 'hidden';
+                appleStartBtn.style.pointerEvents = 'none';
+            }, 600);
             appleBootSound.currentTime = 0;
             appleBootSound.play().catch(() => {});
             setTimeout(() => {
